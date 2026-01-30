@@ -4,11 +4,28 @@ const GEO_API_URL = "https://geocoding-api.open-meteo.com/v1/search";
 // The  Weather API URL
 const WEATHER_API_URL = "https://api.open-meteo.com/v1/forecast";
 
+// Array containing Top 10 Cities objects
+const top_cities = [
+    { name: "Vancouver", country: "Canada", lat: 49.25, long: -123.12 },
+    { name: "Hanoi", country: "Vietnam", lat: 21.02, long: 105.83 },
+    { name: "Ho Chi Minh City", country: "Vietnam", lat: 10.82, long: 106.63 },
+    { name: "Tokyo", country: "Japan", lat: 35.68, long: 139.65 },
+    { name: "New York", country: "USA", lat: 40.71, long: -74.01 },
+    { name: "London", country: "UK", lat: 51.51, long: -0.13 },
+    { name: "Paris", country: "France", lat: 48.85, long: 2.35 },
+    { name: "Sydney", country: "Australia", lat: -33.87, long: 151.21 },
+    { name: "Dubai", country: "UAE", lat: 25.20, long: 55.27 },
+    { name: "Rio de Janeiro", country: "Brazil", lat: -22.91, long: -43.17 }
+];
+
 // The input text box
 const search_input = document.getElementById("city-input");
 
 // The "View City" button
 const search_button = document.getElementById("view-city-btn");
+
+// Top 10 buttons container element
+const city_list_container = document.getElementById("city-list");
 
 // The weather results card
 const weather_result_card = document.getElementById("weather-result");
@@ -33,6 +50,19 @@ search_button.addEventListener("click", () => {
         // Show an error message
         showError("Please enter a city name.");
     }
+});
+
+// Create the button for each city in Top 10 Cities List
+top_cities.forEach(city => {
+    const btn = document.createElement("button");
+    btn.textContent = city.name;
+    btn.className = "city-btn";
+
+    // Add a fetch weather event when clicking to the button
+    btn.onclick = () => fetchWeather(city.lat, city.long, `${city.name}, ${city.country}`);
+
+    // Add button to the container
+    city_list_container.appendChild(btn);
 });
 
 // Function to search for City Coordinates using Geo URL
