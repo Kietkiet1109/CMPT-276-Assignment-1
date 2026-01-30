@@ -2,9 +2,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Finder</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1>Weather Finder</h1>
+        </header>
 
+        <section class="search-section">
+            <input type="text" id="city-input" placeholder="Enter a city">
+            <button id="view-city-btn">View City</button>
+        </section>
+
+        <div id="loading" class="hidden">Fetching weather data...</div>
+        <div id="error-message" class="hidden"></div>
+
+        <section id="weather-result" class="hidden">
+            <h2 id="display-city">City Name</h2>
+            <div class="weather-details">
+                <p>Temperature: <span id="display-temp">--</span>°C</p>
+                <p>Wind Speed: <span id="display-wind">--</span> km/h</p>
+                <p>Humidity: <span id="display-humidity">--</span>%</p>
+            </div>
+        </section>
+
+        <hr>
+
+        <section class="top-cities">
+            <h3>Top 10 Cities</h3>
+            <div id="city-list" class="city-grid">
+            </div>
+        </section>
+    </div>
 </body>
 </html>
