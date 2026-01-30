@@ -1,3 +1,6 @@
+// The Geo API URL for searching
+const GEO_API_URL = "https://geocoding-api.open-meteo.com/v1/search";
+
 // The  Weather API URL
 const WEATHER_API_URL = "https://api.open-meteo.com/v1/forecast";
 
@@ -15,6 +18,12 @@ const top_cities = [
     { name: "Rio de Janeiro", country: "Brazil", lat: -22.91, long: -43.17 }
 ];
 
+// The input text box
+const search_input = document.getElementById("city-input");
+
+// The "View City" button
+const search_button = document.getElementById("view-city-btn");
+
 // Top 10 buttons container element
 const city_list_container = document.getElementById("city-list");
 
@@ -26,6 +35,22 @@ const loading_text = document.getElementById("loading");
 
 // The error message element
 const error_message = document.getElementById("error-message");
+
+// Event Listener for Search button
+search_button.addEventListener("click", () => {
+
+    // Get the value typed into the input box
+    const city_name = search_input.value.trim();
+
+    // Check if the city name not empty
+    if (city_name) {
+        // Search for coordinates based on the city name
+        searchCityCoordinates(city_name);
+    } else {
+        // Show an error message
+        showError("Please enter a city name.");
+    }
+});
 
 // Create the button for each city in Top 10 Cities List
 top_cities.forEach(city => {
@@ -39,6 +64,35 @@ top_cities.forEach(city => {
     // Add button to the container
     city_list_container.appendChild(btn);
 });
+
+// Function to search for City Coordinates using Geo URL
+async function searchCityCoordinates(city_name) {
+
+    // Show the loading text when waiting to fetch
+    showLoading(true);
+
+    try {
+        // Requesting Coordinates using Geo API
+        const response = await fetch(`${GEO_API_URL}?name=${city_name}&count=1&language=en&format=json`);
+        const data = await response.json();
+
+        // Check if the city was found
+        if (!data.results || data.results.length === 0) {
+            throw new Error("City not found. Please try again.");
+        }
+
+        // Extract latitude, longitude, name, and country
+        const { latitude, longitude, name, country } = data.results[0];
+
+        // Fetch weather using the found coordinates
+        fetchWeather(latitude, longitude, `${name}, ${country}`);
+
+    } catch (error) {
+        // Display the error message to the user
+        showError(error.message);
+        showLoading(false);
+    }
+}
 
 // Function to fetch the actual weather using coordinates
 async function fetchWeather(lat, long, city_name) {
